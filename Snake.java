@@ -2,6 +2,7 @@ public class Snake {
   private int[] head;
   private int[] tail;
   private int[][] board;
+  private int ticks;
   private static int GRASS = 0;
   private static int BODY = 1;
   private static int HEAD = 2;
@@ -17,6 +18,7 @@ public class Snake {
       tail[1] = 1;
       head[0] = x/2;
       tail[0] = x/2;
+      ticks = 0;
       fillBoard();
     }
   }
@@ -29,7 +31,39 @@ public class Snake {
     head[0] = 15/2;
     tail[1] = 1;
     tail[0] = 15/2;
+    ticks = 0;
     fillBoard();
+  }
+
+  public Snake(int x, int y, boolean rand, int oriX, int oriY) {
+    this(x, y);
+    if (rand) {
+      boolean temp = false;
+      while (! temp) {
+        head[1] = (int)(Math.random()*(board.length - 2) + 1);
+        head[0] = (int)(Math.random()*(board[0].length - 2) + 1);
+        int straight = (int)(Math.random()*2);
+        if (straight == 0 && head[1] + oriX*3 < board.length && head[1] + oriX*3 >= 0) {
+          tail[1] = oriX*3 + head[1];
+          tail[0] = head[0];
+          temp = true;
+        }
+        else if (straight == 1 && head[0] + oriX*3 < board.length && head[0] + oriX*3 >= 0) {
+          tail[0] = oriX*3 + head[0];
+          tail[1] = head[1];
+          temp = true;
+        }
+        else {
+          temp = false;
+        }
+      }
+    }
+    ticks = 0;
+    fillBoard();
+  }
+
+  public void move() {
+
   }
 
   private void fillBoard() {
@@ -96,7 +130,7 @@ public class Snake {
   }
 
   public static void main(String[] args) {
-    Snake snake = new Snake(6, 6);
+    Snake snake = new Snake(10, 10, true, 1, 1);
     System.out.println(snake);
   }
 }
