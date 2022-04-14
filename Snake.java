@@ -15,8 +15,8 @@ public class Snake {
       tail = new int[2];
       head[1] = 4;
       tail[1] = 1;
-      head[0] = x/2 + 1;
-      tail[0] = x/2 + 1;
+      head[0] = x/2;
+      tail[0] = x/2;
       fillBoard();
     }
   }
@@ -26,9 +26,9 @@ public class Snake {
     head = new int[2];
     tail = new int[2];
     head[1] = 4;
-    head[0] = 15/2 + 1;
+    head[0] = 15/2;
     tail[1] = 1;
-    tail[0] = 15/2 + 1;
+    tail[0] = 15/2;
     fillBoard();
   }
 
@@ -38,15 +38,43 @@ public class Snake {
         board[i][j] = GRASS;
       }
     }
+    fillBody();
     board[head[0]][head[1]] = HEAD;
     board[tail[0]][tail[1]] = TAIL;
   }
 
+  /*
+    Method made like this for future proofing when positions can be randomized
+  */
   private void fillBody() {
     int xH = head[0];
     int xT = tail[0];
     int yH = head[1];
-    int yT = head[1];
+    int yT = tail[1];
+    if (xH == xT) {
+      if (yT > yH) {
+        for (int i = yH + 1; i < yT; i++) {
+          board[xH][i] = BODY;
+        }
+      }
+      else {
+        for (int i = yT; i < yH; i++) {
+          board[xH][i] = BODY;
+        }
+      }
+    }
+    else if (yH == yT) {
+      if (xT > xH) {
+        for (int i = xH + 1; i < xT; i++) {
+          board[i][yH] = BODY;
+        }
+      }
+      else {
+        for (int i = xT + 1; i < xH; i++) {
+          board[i][yH] = BODY;
+        }
+      }
+    }
   }
 
   public String toString(){
@@ -68,7 +96,7 @@ public class Snake {
   }
 
   public static void main(String[] args) {
-    Snake snake = new Snake();
+    Snake snake = new Snake(6, 6);
     System.out.println(snake);
   }
 }
