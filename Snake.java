@@ -7,6 +7,7 @@ public class Snake {
   private int ticks;
   private boolean alive;
   private int size;
+  private String direction;
   private ArrayDeque<int[]> body;
   private static int GRASS = 0;
   private static int BODY = 1;
@@ -37,6 +38,7 @@ public class Snake {
       generateApple();
       body.addFirst(head);
       body.addLast(tail);
+      direction = "d";
     }
   }
 
@@ -59,6 +61,7 @@ public class Snake {
     generateApple();
     body.addFirst(head);
     body.addLast(tail);
+    direction = "d";
   }
 
   /**Initializes the map to the size specified
@@ -66,8 +69,10 @@ public class Snake {
   *@param rows is the starting height of the map
   *@param cols is the starting width of the map
   *@param rand is whether or not it will be randomized, false simply calls another constructor
-  *@param orientation determines whether the snake is vertical(0) or horizontal(1);
+  *@param orientation determines whether the snake is horizontal(0) or vertical(1);
   *@param yOrientation determines whether the head will be at the top(1) or bottom(-1);
+  * (0,1) left (0, -1) right
+  * (1, 1) up (1, -1) down
   *invalid values will be set to a default of vertical(0) and top(1) and rows(15) and cols(15);
   */
   public Snake(int rows, int cols, boolean rand, int orientation, int yOrientation) {
@@ -84,7 +89,7 @@ public class Snake {
       while (! temp) {
         head[1] = (int)(Math.random()*(map.length - 2) + 1);
         head[0] = (int)(Math.random()*(map[0].length - 2) + 1);
-        int dir = (int)(Math.random()*2);
+        // int dir = (int)(Math.random()*2);
         if (orientation == 0 && head[1] + yOrientation*3 < map.length && head[1] + yOrientation*3 >= 0) {
           tail[1] = yOrientation*3 + head[1];
           tail[0] = head[0];
@@ -107,6 +112,15 @@ public class Snake {
     generateApple();
     body.addFirst(head);
     body.addLast(tail);
+    direction = directional(orientation, yOrientation);
+  }
+
+  private String directional(int n, int m) {
+    if (n == 0 && m == 1) return "left";
+    else if (n == 0 && m == -1) return "right";
+    else if (n == 1 && m == 1) return "up";
+    else if (n == 1 && m == -1) return "down";
+    return "right";
   }
 
   /**Generates a random apple somewhere on the map
@@ -130,10 +144,11 @@ public class Snake {
   /**Takes in a parameter that moves the Snake
   *@param direction should be a letter wasd or up/left/down/right
   */
-  public void move(String direction) {
+  public void move(String dir) {
+    direction = dir;
     if (alive) {
       ticks++;
-      if (direction.equalsIgnoreCase("up") || direction.equalsIgnoreCase("w")) {
+      if (dir.equalsIgnoreCase("up") || dir.equalsIgnoreCase("w")) {
         if (head[0] - 1 < 0) {
           alive = false;
         }
@@ -157,7 +172,7 @@ public class Snake {
           }
         }
       }
-      else if (direction.equalsIgnoreCase("left") || direction.equalsIgnoreCase("a")) {
+      else if (dir.equalsIgnoreCase("left") || dir.equalsIgnoreCase("a")) {
         if (head[1] - 1 < 0) {
           alive = false;
         }
@@ -181,7 +196,7 @@ public class Snake {
           }
         }
       }
-      else if (direction.equalsIgnoreCase("down") || direction.equalsIgnoreCase("s")) {
+      else if (dir.equalsIgnoreCase("down") || dir.equalsIgnoreCase("s")) {
         if (head[0] + 1 >= map.length) {
           alive = false;
         }
@@ -205,7 +220,7 @@ public class Snake {
           }
         }
       }
-      else if (direction.equalsIgnoreCase("right") || direction.equalsIgnoreCase("d")) {
+      else if (dir.equalsIgnoreCase("right") || dir.equalsIgnoreCase("d")) {
         if (head[1] + 1 >= map[0].length) {
           alive = false;
         }
@@ -240,6 +255,10 @@ public class Snake {
   */
   public int getTicks() {
     return ticks;
+  }
+
+  public String getDirection() {
+    return direction;
   }
 
   /**
