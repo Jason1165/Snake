@@ -12,7 +12,7 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(0, 255, 0);
   if (frameCount % 100 == 0) {
     snake.move(snake.getDirection());
   }
@@ -31,19 +31,19 @@ void stringToSquare(String[] lines) {
       }
       if (c == 'H') {
         fill(126, 0, 0);
-        rect(j*SQUARESIZE, i*SQUARESIZE, SQUARESIZE, SQUARESIZE);
+        rect(j*SQUARESIZE, i*SQUARESIZE, SQUARESIZE, SQUARESIZE, SQUARESIZE/4);
       }
       if (c == 'T') {
         fill(0, 0, 126);
-        rect(j*SQUARESIZE, i*SQUARESIZE, SQUARESIZE, SQUARESIZE);
+        rect(j*SQUARESIZE, i*SQUARESIZE, SQUARESIZE, SQUARESIZE, SQUARESIZE/4);
       }
       if (c == '&') {
         fill(0, 0, 256);
-        rect(j*SQUARESIZE, i*SQUARESIZE, SQUARESIZE, SQUARESIZE);
+        rect(j*SQUARESIZE, i*SQUARESIZE, SQUARESIZE, SQUARESIZE, SQUARESIZE/4);
       }
       if (c == '@') {
         fill(255, 0, 0);
-        rect(j*SQUARESIZE, i*SQUARESIZE, SQUARESIZE, SQUARESIZE);
+        ellipse(j*SQUARESIZE+SQUARESIZE/2, i*SQUARESIZE+SQUARESIZE/2, SQUARESIZE, SQUARESIZE);
       }
     }
   }
@@ -51,16 +51,16 @@ void stringToSquare(String[] lines) {
 
 void keyPressed() {
   if (key == 'w' || key == 'W' || key == UP) {
-    snake.move("UP"); 
+    snake.move("w"); 
   }
   if (key == 'a' || key == 'A' || key == LEFT) {
-    snake.move("LEFT"); 
+    snake.move("a"); 
   }
   if (key == 's' || key == 'S' || key == DOWN) {
-    snake.move("DOWN"); 
+    snake.move("s"); 
   }
   if (key == 'd' || key == 'D' || key == RIGHT) {
-    snake.move("RIGHT"); 
+    snake.move("d"); 
   }
   if (key == ' ') {
     background(155);

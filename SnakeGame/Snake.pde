@@ -116,11 +116,11 @@ public class Snake {
   }
 
   private String directional(int n, int m) {
-    if (n == 0 && m == 1) return "left";
-    else if (n == 0 && m == -1) return "right";
-    else if (n == 1 && m == 1) return "up";
-    else if (n == 1 && m == -1) return "down";
-    return "right";
+    if (n == 0 && m == 1) return "a";
+    else if (n == 0 && m == -1) return "d";
+    else if (n == 1 && m == 1) return "w";
+    else if (n == 1 && m == -1) return "s";
+    return "d";
   }
 
   /**Generates a random apple somewhere on the map
