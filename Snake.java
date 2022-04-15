@@ -5,8 +5,9 @@ public class Snake {
   private int[] tail;
   private int[][] map;
   private int ticks;
-  private int[] apple;
-  private ArrayList<int[]> apples;
+  private boolean alive;
+  private int size;
+  private ArrayDeque<int[]> body;
   private static int GRASS = 0;
   private static int BODY = 1;
   private static int HEAD = 2;
@@ -24,16 +25,21 @@ public class Snake {
       map = new int[rows][cols];
       head = new int[2];
       tail = new int[2];
-      apple = new int[2];
+      alive = true;
       head[1] = 4;
       tail[1] = 1;
       head[0] = rows/2;
       tail[0] = rows/2;
       ticks = 0;
+      size = 4;
       fillBoard();
       generateApple();
+      body = new ArrayDeque<int[]>();
+      body.addFirst(head);
+      body.addLast(tail);
     }
   }
+
   /**Initializes the map with a 15 by 15
   *and sets the head to the middle row 4 over and the tail three before
   */
@@ -41,14 +47,18 @@ public class Snake {
     map = new int[15][15];
     head = new int[2];
     tail = new int[2];
-    apple = new int[2];
+    alive = true;
     head[1] = 4;
     head[0] = 15/2;
     tail[1] = 1;
     tail[0] = 15/2;
     ticks = 0;
+    size = 4;
     fillBoard();
     generateApple();
+    body = new ArrayDeque<int[]>();
+    body.addFirst(head);
+    body.addLast(tail);
   }
 
   /**Initializes the map to the size specified
@@ -89,9 +99,14 @@ public class Snake {
         }
       }
     }
+    size = 4;
+    alive = true;
     ticks = 0;
     fillBoard();
     generateApple();
+    body = new ArrayDeque<int[]>();
+    body.addFirst(head);
+    body.addLast(tail);
   }
 
   /**Generates a random apple somewhere on the map
@@ -116,18 +131,40 @@ public class Snake {
   *@param direction should be a letter wasd or up/left/down/right
   */
   public void move(String direction) {
-    if (direction.equalsIgnoreCase("up") || direction.equalsIgnoreCase("w")) {
+    if (alive) {
+      ticks++;
+      if (direction.equalsIgnoreCase("up") || direction.equalsIgnoreCase("w")) {
+        if (head[1] - 1 < 0) {
+          alive = false;
+        }
+        else {
+          head[1] -= 1;
+        }
+      }
+      else if (direction.equalsIgnoreCase("left") || direction.equalsIgnoreCase("a")) {
 
-    }
-    else if (direction.equalsIgnoreCase("left") || direction.equalsIgnoreCase("a")) {
+      }
+      else if (direction.equalsIgnoreCase("down") || direction.equalsIgnoreCase("s")) {
 
-    }
-    else if (direction.equalsIgnoreCase("down") || direction.equalsIgnoreCase("s")) {
+      }
+      else if (direction.equalsIgnoreCase("right") || direction.equalsIgnoreCase("d")) {
 
+      }
     }
-    else if (direction.equalsIgnoreCase("right") || direction.equalsIgnoreCase("d")) {
+  }
 
-    }
+  /**
+  *@return number of ticks or times drawn
+  */
+  public int getTicks() {
+    return ticks;
+  }
+
+  /**
+  *@return size of snake
+  */
+  public int size() {
+    return size;
   }
 
   private void fillBoard() {
@@ -153,11 +190,13 @@ public class Snake {
       if (yT > yH) {
         for (int i = yH + 1; i < yT; i++) {
           map[xH][i] = BODY;
+          body.add(new int[] {xH, i});
         }
       }
       else {
         for (int i = yT; i < yH; i++) {
           map[xH][i] = BODY;
+          body.add(new int[] {xH, i});
         }
       }
     }
@@ -165,11 +204,13 @@ public class Snake {
       if (xT > xH) {
         for (int i = xH + 1; i < xT; i++) {
           map[i][yH] = BODY;
+          body.add(new int[] {i, yH});
         }
       }
       else {
         for (int i = xT + 1; i < xH; i++) {
           map[i][yH] = BODY;
+          body.add(new int[] {i, yH});
         }
       }
     }
