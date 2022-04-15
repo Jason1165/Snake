@@ -1,52 +1,60 @@
+import java.util.*;
+
 public class Snake {
   private int[] head;
   private int[] tail;
-  private int[][] board;
+  private int[][] map;
   private int ticks;
+  private int[] apple;
+  private ArrayList<int[]> apples;
   private static int GRASS = 0;
   private static int BODY = 1;
   private static int HEAD = 2;
   private static int TAIL = 3;
   private static int APPLE = 4;
 
-  /**Initializes the SnakeField to the size specified
+  /**Initializes the map to the size specified
   *and sets the head to the middle row 4 over and the tail three before
-  *@param rows is the starting height of the SnakeField
-  *@param cols is the starting width of the SnakeField
+  *@param rows is the starting height of the map
+  *@param cols is the starting width of the map
   */
   public Snake(int rows, int cols) {
     this();
     if(rows > 5 && cols > 5) {
-      board = new int[rows][cols];
+      map = new int[rows][cols];
       head = new int[2];
       tail = new int[2];
+      apple = new int[2];
       head[1] = 4;
       tail[1] = 1;
       head[0] = rows/2;
       tail[0] = rows/2;
       ticks = 0;
       fillBoard();
+      generateApple();
     }
   }
-  /**Initializes the SnakeField a 15 by 15
+  /**Initializes the map with a 15 by 15
   *and sets the head to the middle row 4 over and the tail three before
   */
   public Snake(){
-    board = new int[15][15];
+    map = new int[15][15];
     head = new int[2];
     tail = new int[2];
+    apple = new int[2];
     head[1] = 4;
     head[0] = 15/2;
     tail[1] = 1;
     tail[0] = 15/2;
     ticks = 0;
     fillBoard();
+    generateApple();
   }
 
-  /**Initializes the SnakeField to the size specified
+  /**Initializes the map to the size specified
   *and randomizes where the body is, not at the border.
-  *@param rows is the starting height of the SnakeField
-  *@param cols is the starting width of the SnakeField
+  *@param rows is the starting height of the map
+  *@param cols is the starting width of the map
   *@param rand is whether or not it will be randomized, false simply calls another constructor
   *@param orientation determines whether the snake is vertical(0) or horizontal(1);
   *@param yOrientation determines whether the head will be at the top(1) or bottom(-1);
@@ -63,15 +71,15 @@ public class Snake {
     if (rand) {
       boolean temp = false;
       while (! temp) {
-        head[1] = (int)(Math.random()*(board.length - 2) + 1);
-        head[0] = (int)(Math.random()*(board[0].length - 2) + 1);
+        head[1] = (int)(Math.random()*(map.length - 2) + 1);
+        head[0] = (int)(Math.random()*(map[0].length - 2) + 1);
         int dir = (int)(Math.random()*2);
-        if (orientation == 0 && head[1] + yOrientation*3 < board.length && head[1] + yOrientation*3 >= 0) {
+        if (orientation == 0 && head[1] + yOrientation*3 < map.length && head[1] + yOrientation*3 >= 0) {
           tail[1] = yOrientation*3 + head[1];
           tail[0] = head[0];
           temp = true;
         }
-        else if (orientation == 1 && head[0] + yOrientation*3 < board.length && head[0] + yOrientation*3 >= 0) {
+        else if (orientation == 1 && head[0] + yOrientation*3 < map.length && head[0] + yOrientation*3 >= 0) {
           tail[0] = yOrientation*3 + head[0];
           tail[1] = head[1];
           temp = true;
@@ -83,24 +91,54 @@ public class Snake {
     }
     ticks = 0;
     fillBoard();
+    generateApple();
+  }
+
+  /**Generates a random apple somewhere on the map
+  *@return true when apple is placed and false when it is not or when snake is too big
+  */
+  public boolean generateApple() {
+    int maxreps = (int)((double)(map.length * map[0].length)*1.5);
+    int counter = 0;
+    while (maxreps > counter) {
+      counter++;
+      int x = (int)(Math.random()*map.length);
+      int y = (int)(Math.random()*map[0].length);
+      if (map[x][y] == GRASS) {
+        map[x][y] = APPLE;
+        return true;
+      }
+    }
+    return false;
   }
 
   /**Takes in a parameter that moves the Snake
   *@param direction should be a letter wasd or up/left/down/right
   */
   public void move(String direction) {
+    if (direction.equalsIgnoreCase("up") || direction.equalsIgnoreCase("w")) {
 
+    }
+    else if (direction.equalsIgnoreCase("left") || direction.equalsIgnoreCase("a")) {
+
+    }
+    else if (direction.equalsIgnoreCase("down") || direction.equalsIgnoreCase("s")) {
+
+    }
+    else if (direction.equalsIgnoreCase("right") || direction.equalsIgnoreCase("d")) {
+
+    }
   }
 
   private void fillBoard() {
-    for (int i = 0; i < board.length; i++) {
-      for (int j = 0; j < board.length; j++) {
-        board[i][j] = GRASS;
+    for (int i = 0; i < map.length; i++) {
+      for (int j = 0; j < map.length; j++) {
+        map[i][j] = GRASS;
       }
     }
     fillBody();
-    board[head[0]][head[1]] = HEAD;
-    board[tail[0]][tail[1]] = TAIL;
+    map[head[0]][head[1]] = HEAD;
+    map[tail[0]][tail[1]] = TAIL;
   }
 
   /*
@@ -114,24 +152,24 @@ public class Snake {
     if (xH == xT) {
       if (yT > yH) {
         for (int i = yH + 1; i < yT; i++) {
-          board[xH][i] = BODY;
+          map[xH][i] = BODY;
         }
       }
       else {
         for (int i = yT; i < yH; i++) {
-          board[xH][i] = BODY;
+          map[xH][i] = BODY;
         }
       }
     }
     else if (yH == yT) {
       if (xT > xH) {
         for (int i = xH + 1; i < xT; i++) {
-          board[i][yH] = BODY;
+          map[i][yH] = BODY;
         }
       }
       else {
         for (int i = xT + 1; i < xH; i++) {
-          board[i][yH] = BODY;
+          map[i][yH] = BODY;
         }
       }
     }
@@ -142,17 +180,17 @@ public class Snake {
   */
   public String toString(){
     StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < board.length; i++) {
-      for (int c = 0; c < board[i].length; c++) {
-        if(board[i][c]==GRASS)
+    for (int i = 0; i < map.length; i++) {
+      for (int c = 0; c < map[i].length; c++) {
+        if(map[i][c]==GRASS)
           builder.append("#");
-        else if(board[i][c]==HEAD)
+        else if(map[i][c]==HEAD)
           builder.append("H");
-        else if(board[i][c]==TAIL)
+        else if(map[i][c]==TAIL)
           builder.append("T");
-        else if(board[i][c]==BODY)
+        else if(map[i][c]==BODY)
           builder.append("&");
-        else if(board[i][c]==APPLE)
+        else if(map[i][c]==APPLE)
           builder.append("@");
       }
       builder.append("\n");
