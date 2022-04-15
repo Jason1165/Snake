@@ -9,11 +9,11 @@ public class Snake {
   private int size;
   private String direction;
   private ArrayDeque<int[]> body;
-  private static int GRASS = 0;
-  private static int BODY = 1;
-  private static int HEAD = 2;
-  private static int TAIL = 3;
-  private static int APPLE = 4;
+  private static final int GRASS = 0;
+  private static final int BODY = 1;
+  private static final int HEAD = 2;
+  private static final int TAIL = 3;
+  private static final int APPLE = 4;
 
   /**Initializes the map to the size specified
   *and sets the head to the middle row 4 over and the tail three before
@@ -116,11 +116,11 @@ public class Snake {
   }
 
   private String directional(int n, int m) {
-    if (n == 0 && m == 1) return "left";
-    else if (n == 0 && m == -1) return "right";
-    else if (n == 1 && m == 1) return "up";
-    else if (n == 1 && m == -1) return "down";
-    return "right";
+    if (n == 0 && m == 1) return "a";
+    else if (n == 0 && m == -1) return "d";
+    else if (n == 1 && m == 1) return "w";
+    else if (n == 1 && m == -1) return "s";
+    return "d";
   }
 
   /**Generates a random apple somewhere on the map
