@@ -21,6 +21,7 @@ public class Snake {
   */
   public Snake(int rows, int cols) {
     this();
+    body = new ArrayDeque<int[]>();
     if(rows > 5 && cols > 5) {
       map = new int[rows][cols];
       head = new int[2];
@@ -34,7 +35,6 @@ public class Snake {
       size = 4;
       fillBoard();
       generateApple();
-      body = new ArrayDeque<int[]>();
       body.addFirst(head);
       body.addLast(tail);
     }
@@ -44,6 +44,7 @@ public class Snake {
   *and sets the head to the middle row 4 over and the tail three before
   */
   public Snake(){
+    body = new ArrayDeque<int[]>();
     map = new int[15][15];
     head = new int[2];
     tail = new int[2];
@@ -56,7 +57,6 @@ public class Snake {
     size = 4;
     fillBoard();
     generateApple();
-    body = new ArrayDeque<int[]>();
     body.addFirst(head);
     body.addLast(tail);
   }
@@ -72,6 +72,7 @@ public class Snake {
   */
   public Snake(int rows, int cols, boolean rand, int orientation, int yOrientation) {
     this(rows, cols);
+    body = new ArrayDeque<int[]>();
     if (orientation != 0 && orientation != 1) {
       orientation = 0;
     }
@@ -104,7 +105,6 @@ public class Snake {
     ticks = 0;
     fillBoard();
     generateApple();
-    body = new ArrayDeque<int[]>();
     body.addFirst(head);
     body.addLast(tail);
   }
@@ -138,18 +138,105 @@ public class Snake {
           alive = false;
         }
         else {
+          map[head[0]][head[1]] = BODY;
           head[1] -= 1;
+          body.addFirst(head);
+          map[head[0]][head[1]] = HEAD;
+          map[tail[0]][tail[1]] = GRASS;
+          int tempT[] = body.removeLast();
+          tail = body.getLast();
+          if (map[head[0]][head[1]] == BODY) {
+            alive = false;
+          }
+          else if (map[head[0]][head[1]] == APPLE) {
+            body.addLast(tempT);
+            map[tempT[0]][tempT[1]] = TAIL;
+            generateApple();
+          }
+          else {
+            map[tail[0]][tail[1]] = TAIL;
+          }
         }
       }
       else if (direction.equalsIgnoreCase("left") || direction.equalsIgnoreCase("a")) {
+        if (head[0] - 1 < 0) {
+          alive = false;
+        }
+        else {
+          map[head[0]][head[1]] = BODY;
+          head[0] -= 1;
+          body.addFirst(head);
+          map[head[0]][head[1]] = HEAD;
+          map[tail[0]][tail[1]] = GRASS;
+          int tempT[] = body.removeLast();
+          tail = body.getLast();
+          if (map[head[0]][head[1]] == BODY) {
+            alive = false;
+          }
+          else if (map[head[0]][head[1]] == APPLE) {
+            body.addLast(tempT);
+            map[tempT[0]][tempT[1]] = TAIL;
+            generateApple();
+          }
+          else {
+            map[tail[0]][tail[1]] = TAIL;
+          }
+        }
 
       }
       else if (direction.equalsIgnoreCase("down") || direction.equalsIgnoreCase("s")) {
-
+        if (head[0] + 1 >= map.length) {
+          alive = false;
+        }
+        else {
+          map[head[0]][head[1]] = BODY;
+          head[0] += 1;
+          body.addFirst(head);
+          map[head[0]][head[1]] = HEAD;
+          map[tail[0]][tail[1]] = GRASS;
+          int tempT[] = body.removeLast();
+          tail = body.getLast();
+          if (map[head[0]][head[1]] == BODY) {
+            alive = false;
+          }
+          else if (map[head[0]][head[1]] == APPLE) {
+            body.addLast(tempT);
+            map[tempT[0]][tempT[1]] = TAIL;
+            generateApple();
+          }
+          else {
+            map[tail[0]][tail[1]] = TAIL;
+          }
+        }
       }
       else if (direction.equalsIgnoreCase("right") || direction.equalsIgnoreCase("d")) {
-
+        if (head[1] + 1 < map[0].length) {
+          alive = false;
+        }
+        else {
+          map[head[0]][head[1]] = BODY;
+          head[1] += 1;
+          body.addFirst(head);
+          map[head[0]][head[1]] = HEAD;
+          map[tail[0]][tail[1]] = GRASS;
+          int tempT[] = body.removeLast();
+          tail = body.getLast();
+          if (map[head[0]][head[1]] == BODY) {
+            alive = false;
+          }
+          else if (map[head[0]][head[1]] == APPLE) {
+            body.addLast(tempT);
+            map[tempT[0]][tempT[1]] = TAIL;
+            generateApple();
+          }
+          else {
+            map[tail[0]][tail[1]] = TAIL;
+          }
+        }
       }
+    }
+    if (!alive) {
+      System.out.println("The snake has died!");
     }
   }
 
@@ -186,17 +273,20 @@ public class Snake {
     int xT = tail[0];
     int yH = head[1];
     int yT = tail[1];
+    int bodyPart[] = new int[2];
     if (xH == xT) {
       if (yT > yH) {
         for (int i = yH + 1; i < yT; i++) {
           map[xH][i] = BODY;
-          body.add(new int[] {xH, i});
+          bodyPart[0] = xH; bodyPart[1] = i;
+          body.addLast(bodyPart);
         }
       }
       else {
-        for (int i = yT; i < yH; i++) {
+        for (int i = yT + 1; i < yH; i++) {
           map[xH][i] = BODY;
-          body.add(new int[] {xH, i});
+          bodyPart[0] = xH; bodyPart[1] = i;
+          body.addFirst(bodyPart);
         }
       }
     }
@@ -204,13 +294,15 @@ public class Snake {
       if (xT > xH) {
         for (int i = xH + 1; i < xT; i++) {
           map[i][yH] = BODY;
-          body.add(new int[] {i, yH});
+          bodyPart[0] = i; bodyPart[1] = yH;
+          body.addLast(bodyPart);
         }
       }
       else {
         for (int i = xT + 1; i < xH; i++) {
           map[i][yH] = BODY;
-          body.add(new int[] {i, yH});
+          bodyPart[0] = i; bodyPart[1] = yH;
+          body.addFirst(bodyPart);
         }
       }
     }
