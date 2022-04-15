@@ -139,7 +139,7 @@ public class Snake {
         }
         else {
           map[head[0]][head[1]] = BODY;
-          head[0] -= 1;
+          changeHead(head[0]-1, head[1]);
           body.addFirst(head);
           if (map[head[0]][head[1]] == APPLE) {
             map[head[0]][head[1]] = HEAD;
@@ -163,7 +163,7 @@ public class Snake {
         }
         else {
           map[head[0]][head[1]] = BODY;
-          head[1] -= 1;
+          changeHead(head[0], head[1]-1);
           body.addFirst(head);
           if (map[head[0]][head[1]] == APPLE) {
             map[head[0]][head[1]] = HEAD;
@@ -187,7 +187,7 @@ public class Snake {
         }
         else {
           map[head[0]][head[1]] = BODY;
-          head[0] += 1;
+          changeHead(head[0]+1, head[1]);
           body.addFirst(head);
           if (map[head[0]][head[1]] == APPLE) {
             map[head[0]][head[1]] = HEAD;
@@ -211,7 +211,7 @@ public class Snake {
         }
         else {
           map[head[0]][head[1]] = BODY;
-          head[1] += 1;
+          changeHead(head[0], head[1]+1);
           body.addFirst(head);
           if (map[head[0]][head[1]] == APPLE) {
             map[head[0]][head[1]] = HEAD;
@@ -242,6 +242,10 @@ public class Snake {
     return ticks;
   }
 
+  /**
+  *Debugging purposes
+  *@return string with coordinates of the head and tail
+  */
   public String getEnds() {
     return ("Head: " + Arrays.toString(head) + " Tail: " + Arrays.toString(tail));
   }
@@ -251,6 +255,16 @@ public class Snake {
   */
   public int size() {
     return size;
+  }
+
+  private void changeHead(int x, int y) {
+    int[] h = new int[]{x, y};
+    head = h;
+  }
+
+  private void changeTail(int x, int y) {
+    int[] t = new int[]{x, y};
+    tail = t;
   }
 
   private void fillBoard() {
@@ -310,6 +324,9 @@ public class Snake {
     }
   }
 
+  /*
+  *Destructive method do not use, only for semi debugging purposes
+  */
   private String bodyToString() {
     String str = "";
     ArrayDeque<int[]> temp = body.clone();
